@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(to right, #74ebd5, #acb6e5);
+    }
+
+    .weather-container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      background: #4facfe;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #00c6ff;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="weather-container">
+    <h1>Weather App</h1>
+
+    <input type="text" id="city" placeholder="Enter city name">
+    <button onclick="getWeather()">Get Weather</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    const apiKey = "8bd90e6d74d9e34860a112ca206bf1f7"; // put your API key here
+
+    function getWeather() {
+      const city = document.getElementById("city").value;
+      const result = document.getElementById("result");
+
+      if (city === "") {
+        result.innerHTML = "❗ Please enter a city name";
+        return;
+      }
+
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.cod === "404") {
+            result.innerHTML = "❌ City not found";
+          } else {
+            result.innerHTML = `
+              <h3>${data.name}</h3>
+              <p>🌡 Temperature: ${data.main.temp} °C</p>
+              <p>☁ Weather: ${data.weather[0].description}</p>
+              <p>💧 Humidity: ${data.main.humidity}%</p>
+              <p>💨 Wind Speed: ${data.wind.speed} m/s</p>
+            `;
+          }
+        })
+        .catch(() => {
+          result.innerHTML = "⚠ Error fetching data";
+        });
+    }
+  </script>
+
+</body>
+</html>
+
+
